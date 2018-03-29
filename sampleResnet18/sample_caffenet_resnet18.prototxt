@@ -1,0 +1,539 @@
+name: "ResNet-18"
+input: "data"
+input_dim: 1
+input_dim: 3
+input_dim: 368
+input_dim: 640
+
+# Layer1_W (64, 3, 7, 7)
+
+layer {
+	bottom: "data"
+	top: "Layer1"
+	name: "Layer1"
+	type: "Convolution"
+	convolution_param {
+		num_output: 64
+		kernel_size: 7
+		pad: 3
+		stride: 2
+	}
+}
+
+layer {
+	bottom: "Layer1"
+	top: "Layer1"
+	name: "Layer1_relu"
+	type: "ReLU"
+}
+
+layer {
+	bottom: "Layer1"
+	top: "Layer2"
+	name: "Layer2"
+	type: "Pooling"
+	pooling_param {
+		kernel_size: 2
+		stride: 2
+		pool: MAX
+	}
+}
+
+# Layer3_block_0_W (64, 64, 3, 3)
+
+layer {
+	bottom: "Layer2"
+	top: "Layer3_block_0"
+	name: "Layer3_block_0"
+	type: "Convolution"
+	convolution_param {
+		num_output: 64
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+layer {
+	bottom: "Layer3_block_0"
+	top: "Layer3_block_0"
+	name: "Layer3_block_0_relu"
+	type: "ReLU"
+}
+
+# Layer3_block_1_W (64, 64, 3, 3)
+
+layer {
+	bottom: "Layer3_block_0"
+	top: "Layer3_block_1"
+	name: "Layer3_block_1"
+	type: "Convolution"
+	convolution_param {
+		num_output: 64
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+layer {
+	bottom: "Layer2"
+	bottom: "Layer3_block_1"
+	top: "Layer3"
+	name: "Layer3"
+	type: "Eltwise"
+}
+
+
+layer {
+	bottom: "Layer3"
+	top: "Layer3"
+	name: "Layer3_relu"
+	type: "ReLU"
+}
+
+# Layer4_block_0_W (64, 64, 3, 3)
+
+layer {
+	bottom: "Layer3"
+	top: "Layer4_block_0"
+	name: "Layer4_block_0"
+	type: "Convolution"
+	convolution_param {
+		num_output: 64
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+layer {
+	bottom: "Layer4_block_0"
+	top: "Layer4_block_0"
+	name: "Layer4_block_0_relu"
+	type: "ReLU"
+}
+
+# Layer4_block_1_W (64, 64, 3, 3)
+layer {
+	bottom: "Layer4_block_0"
+	top: "Layer4_block_1"
+	name: "Layer4_block_1"
+	type: "Convolution"
+	convolution_param {
+		num_output: 64
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+layer {
+	bottom: "Layer3"
+	bottom: "Layer4_block_1"
+	top: "Layer4"
+	name: "Layer4"
+	type: "Eltwise"
+}
+
+layer {
+	bottom: "Layer4"
+	top: "Layer4"
+	name: "Layer4_relu"
+	type: "ReLU"
+}
+
+# Layer5_block_0_W (128, 64, 3, 3)
+
+layer {
+	bottom: "Layer4"
+	top: "Layer5_block_0"
+	name: "Layer5_block_0"
+	type: "Convolution"
+	convolution_param {
+		num_output: 128
+		kernel_size: 3
+		pad: 1
+		stride: 2
+	}
+}
+
+layer {
+	bottom: "Layer5_block_0"
+	top: "Layer5_block_0"
+	name: "Layer5_block_0_relu"
+	type: "ReLU"
+}
+
+# Layer5_block_1_W (128, 128, 3, 3)
+
+layer {
+	bottom: "Layer5_block_0"
+	top: "Layer5_block_1"
+	name: "Layer5_block_1"
+	type: "Convolution"
+	convolution_param {
+		num_output: 128
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+# Layer5_proj_block_W (128, 64, 1, 1)
+
+layer {
+	bottom: "Layer4"
+	top: "Layer5_proj_block"
+	name: "Layer5_proj_block"
+	type: "Convolution"
+	convolution_param {
+		num_output: 128
+		kernel_size: 1
+		pad: 0
+		stride: 2
+	}
+}
+
+layer {
+	bottom: "Layer5_proj_block"
+	bottom: "Layer5_block_1"
+	top: "Layer5"
+	name: "Layer5"
+	type: "Eltwise"
+}
+
+layer {
+	bottom: "Layer5"
+	top: "Layer5"
+	name: "Layer5_relu"
+	type: "ReLU"
+}
+
+# Layer6_block_0_W (128, 128, 3, 3)
+
+layer {
+	bottom: "Layer5"
+	top: "Layer6_block_0"
+	name: "Layer6_block_0"
+	type: "Convolution"
+	convolution_param {
+		num_output: 128
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+layer {
+	bottom: "Layer6_block_0"
+	top: "Layer6_block_0"
+	name: "Layer6_block_0_relu"
+	type: "ReLU"
+}
+
+# Layer6_block_1_W (128, 128, 3, 3)
+
+layer {
+	bottom: "Layer6_block_0"
+	top: "Layer6_block_1"
+	name: "Layer6_block_1"
+	type: "Convolution"
+	convolution_param {
+		num_output: 128
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+
+layer {
+	bottom: "Layer5"
+	bottom: "Layer6_block_1"
+	top: "Layer6"
+	name: "Layer6"
+	type: "Eltwise"
+}
+
+layer {
+	bottom: "Layer6"
+	top: "Layer6"
+	name: "Layer6_relu"
+	type: "ReLU"
+}
+
+# Layer7_block_0_W (256, 128, 3, 3)
+
+layer {
+	bottom: "Layer6"
+	top: "Layer7_block_0"
+	name: "Layer7_block_0"
+	type: "Convolution"
+	convolution_param {
+		num_output: 256
+		kernel_size: 3
+		pad: 1
+		stride: 2
+	}
+}
+
+layer {
+	bottom: "Layer7_block_0"
+	top: "Layer7_block_0"
+	name: "Layer7_block_0_relu"
+	type: "ReLU"
+}
+
+# Layer7_block_1_W (256, 256, 3, 3)
+
+layer {
+	bottom: "Layer7_block_0"
+	top: "Layer7_block_1"
+	name: "Layer7_block_1"
+	type: "Convolution"
+	convolution_param {
+		num_output: 256
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+
+# Layer7_proj_block_W (256, 128, 1, 1)
+
+layer {
+	bottom: "Layer6"
+	top: "Layer7_proj_block"
+	name: "Layer7_proj_block"
+	type: "Convolution"
+	convolution_param {
+		num_output: 256
+		kernel_size: 1
+		pad: 0
+		stride: 2
+	}
+}
+
+layer {
+	bottom: "Layer7_proj_block"
+	bottom: "Layer7_block_1"
+	top: "Layer7"
+	name: "Layer7"
+	type: "Eltwise"
+}
+
+layer {
+	bottom: "Layer7"
+	top: "Layer7"
+	name: "Layer7_relu"
+	type: "ReLU"
+}
+
+# Layer8_block_0_W (256, 256, 3, 3)
+
+layer {
+	bottom: "Layer7"
+	top: "Layer8_block_0"
+	name: "Layer8_block_0"
+	type: "Convolution"
+	convolution_param {
+		num_output: 256
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+layer {
+	bottom: "Layer8_block_0"
+	top: "Layer8_block_0"
+	name: "Layer8_block_0_relu"
+	type: "ReLU"
+}
+
+# Layer8_block_1_W (256, 256, 3, 3)
+
+layer {
+	bottom: "Layer8_block_0"
+	top: "Layer8_block_1"
+	name: "Layer8_block_1"
+	type: "Convolution"
+	convolution_param {
+		num_output: 256
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+layer {
+	bottom: "Layer7"
+	bottom: "Layer8_block_1"
+	top: "Layer8"
+	name: "Layer8"
+	type: "Eltwise"
+}
+
+layer {
+	bottom: "Layer8"
+	top: "Layer8"
+	name: "Layer8_relu"
+	type: "ReLU"
+}
+
+# Layer9_block_0_W (512, 256, 3, 3)
+layer {
+	bottom: "Layer8"
+	top: "Layer9_block_0"
+	name: "Layer9_block_0"
+	type: "Convolution"
+	convolution_param {
+		num_output: 512
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+layer {
+	bottom: "Layer9_block_0"
+	top: "Layer9_block_0"
+	name: "Layer9_block_0_relu"
+	type: "ReLU"
+}
+
+# Layer9_block_1_W (512, 512, 3, 3)
+
+layer {
+	bottom: "Layer9_block_0"
+	top: "Layer9_block_1"
+	name: "Layer9_block_1"
+	type: "Convolution"
+	convolution_param {
+		num_output: 512
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+
+# Layer9_proj_block_W (512, 256, 1, 1)
+
+layer {
+	bottom: "Layer8"
+	top: "Layer9_proj_block"
+	name: "Layer9_proj_block"
+	type: "Convolution"
+	convolution_param {
+		num_output: 512
+		kernel_size: 1
+		pad: 0
+		stride: 1
+	}
+}
+
+layer {
+	bottom: "Layer9_proj_block"
+	bottom: "Layer9_block_1"
+	top: "Layer9"
+	name: "Layer9"
+	type: "Eltwise"
+}
+
+layer {
+	bottom: "Layer9"
+	top: "Layer9"
+	name: "Layer9_relu"
+	type: "ReLU"
+}
+
+# Layer10_block_0_W (512, 512, 3, 3)
+layer {
+	bottom: "Layer9"
+	top: "Layer10_block_0"
+	name: "Layer10_block_0"
+	type: "Convolution"
+	convolution_param {
+		num_output: 512
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+layer {
+	bottom: "Layer10_block_0"
+	top: "Layer10_block_0"
+	name: "Layer10_block_0_relu"
+	type: "ReLU"
+}
+
+# Layer10_block_1_W (512, 512, 3, 3)
+layer {
+	bottom: "Layer10_block_0"
+	top: "Layer10_block_1"
+	name: "Layer10_block_1"
+	type: "Convolution"
+	convolution_param {
+		num_output: 512
+		kernel_size: 3
+		pad: 1
+		stride: 1
+	}
+}
+
+
+layer {
+	bottom: "Layer10_block_1"
+	bottom: "Layer9"
+	top: "Layer10"
+	name: "Layer10"
+	type: "Eltwise"
+}
+
+layer {
+	bottom: "Layer10"
+	top: "Layer10"
+	name: "Layer10_relu"
+	type: "ReLU"
+}
+
+# Layer11_cov_W (3, 512, 1, 1)
+
+layer {
+  name: "Layer11_cov"
+  type: "Convolution"
+  bottom: "Layer10"
+  top: "Layer11_cov"
+  convolution_param {
+    stride: 1
+    kernel_size: 1
+    pad: 0
+    num_output: 3
+  }
+}
+layer {
+  name: "Layer11_cov/sigmoid"
+  type: "Sigmoid"
+  bottom: "Layer11_cov"
+  top: "Layer11_cov"
+}
+
+# Layer11_bbox_W (12, 512, 1, 1)
+
+layer {
+  name: "Layer11_bbox"
+  type: "Convolution"
+  bottom: "Layer10"
+  top: "Layer11_bbox"
+  convolution_param {
+    stride: 1
+    kernel_size: 1
+    pad: 0
+    num_output: 12
+  }
+}
+
